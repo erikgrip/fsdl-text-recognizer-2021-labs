@@ -81,12 +81,16 @@ class BaseDataModule(pl.LightningDataModule):
 
     def prepare_data(self, *args, **kwargs) -> None:
         """
+        This method is used to define the processes that are meant to be performed by only one GPU.
+        It’s usually used to handle the task of downloading the data.
         Use this method to do things that might write to disk or that need to be done only from a single GPU
         in distributed settings (so don't set state `self.x = y`).
         """
 
     def setup(self, stage: Optional[str] = None) -> None:
         """
+        This method is used to define the process that is meant to be performed by all the available GPU.
+        It’s usually used to handle the task of loading the data.
         Split into train, val, test, and set dims.
         Should assign `torch Dataset` objects to self.data_train, self.data_val, and optionally self.data_test.
         """

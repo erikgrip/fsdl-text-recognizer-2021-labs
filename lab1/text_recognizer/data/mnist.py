@@ -27,7 +27,10 @@ class MNIST(BaseDataModule):
         super().__init__(args)
         self.data_dir = DOWNLOADED_DATA_DIRNAME
         self.transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
-        self.dims = (1, 28, 28)  # dims are returned when calling `.size()` on this object.
+        # self.dims is returned when you call dm.size()
+        # Setting default dims here because we know them.
+        # Could optionally be assigned dynamically in dm.setup()
+        self.dims = (1, 28, 28)
         self.output_dims = (1,)
         self.mapping = list(range(10))
 
