@@ -86,10 +86,15 @@ def main():
     model_checkpoint_callback = pl.callbacks.ModelCheckpoint(
         filename="{epoch:03d}-{val_loss:.3f}-{val_cer:.3f}", monitor="val_loss", mode="min"
     )
-    callbacks = [early_stopping_callback, model_checkpoint_callback]
+    summary_callback = pl.callbacks.ModelSummary(max_depth=1)
+    callbacks = [early_stopping_callback, model_checkpoint_callback, summary_callback]
 
-    args.weights_summary = "full"  # Print full summary of the model
-    trainer = pl.Trainer.from_argparse_args(args, callbacks=callbacks, logger=logger, weights_save_path="training/logs")
+    trainer = pl.Trainer.from_argparse_args(
+        args,
+        callbacks=callbacks,
+        logger=logger,
+        enable_model_summary=False,  # callback instead as per deprecation warning
+        weights_save_path="training/logs")
 
     # pylint: disable=no-member
     trainer.tune(lit_model, datamodule=data)  # If passing --auto_lr_find, this will set learning rate
