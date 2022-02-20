@@ -6,8 +6,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-FC1_DIM = 1024
-FC2_DIM = 128
+NUM_HIDDEN_LAYERS = 1
+FC_DIM = 128
 
 
 class MLP(nn.Module):
@@ -24,27 +24,35 @@ class MLP(nn.Module):
         input_dim = np.prod(data_config["input_dims"])
         num_classes = len(data_config["mapping"])
 
-        fc1_dim = self.args.get("fc1", FC1_DIM)
-        fc2_dim = self.args.get("fc2", FC2_DIM)
+        fc_dim = self.args.get("layer_size", FC_DIM)
+        num_layers = self.args.get("num_hidden_layers", NUM_HIDDEN_LAYERS)
 
         self.dropout = nn.Dropout(0.5)
-        self.fc1 = nn.Linear(input_dim, fc1_dim)
-        self.fc2 = nn.Linear(fc1_dim, fc2_dim)
-        self.fc3 = nn.Linear(fc2_dim, num_classes)
+
+        self.layers = nn.ModuleList([
+            nn.Linear(input_dim, fc_dim),  # input layer
+            nn.Linear(fc_dim, num_classes)  # output layer
+        ])
+        for i in range(num_layers):
+            self.layers.insert(index=1, module=nn.Linear(fc_dim, fc_dim))
+
+        print(self.layers)
+
 
     def forward(self, x):
         x = torch.flatten(x, 1)
-        x = self.fc1(x)
-        x = F.relu(x)
-        x = self.dropout(x)
-        x = self.fc2(x)
-        x = F.relu(x)
-        x = self.dropout(x)
-        x = self.fc3(x)
+        for layer in self.layers:
+            # All exept output layer are followed by relu and dropout
+            if layer is self.layers[-1]:
+                x = layer(x)
+            else:
+                x = layer(x)
+                x = F.relu(x)
+                x = self.dropout(x)
         return x
 
     @staticmethod
     def add_to_argparse(parser):
-        parser.add_argument("--fc1", type=int, default=1024)
-        parser.add_argument("--fc2", type=int, default=128)
+        parser.add_argument("--num_hidden_layers", type=int, default=NUM_HIDDEN_LAYERS)
+        parser.add_argument("--layer_size", type=int, default=FC_DIM)
         return parser
