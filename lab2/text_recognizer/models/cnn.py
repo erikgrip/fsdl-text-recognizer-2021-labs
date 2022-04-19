@@ -9,6 +9,7 @@ import torch.nn.functional as F
 CONV_DIM = 64
 FC_DIM = 128
 IMAGE_SIZE = 28
+NUM_CONV_BLOCKS = 1
 
 
 class ConvBlock(nn.Module):
@@ -18,8 +19,12 @@ class ConvBlock(nn.Module):
 
     def __init__(self, input_channels: int, output_channels: int) -> None:
         super().__init__()
-        self.conv1 = nn.Conv2d(input_channels, output_channels, kernel_size=3, stride=1, padding=1)
-        self.conv2 = nn.Conv2d(output_channels, output_channels, kernel_size=3, stride=1, padding=1)
+        self.conv1 = nn.Conv2d(
+            input_channels, output_channels, kernel_size=3, stride=1, padding=1
+        )
+        self.conv2 = nn.Conv2d(
+            output_channels, output_channels, kernel_size=3, stride=1, padding=1
+        )
         self.bn1 = nn.BatchNorm2d(output_channels)
         self.bn2 = nn.BatchNorm2d(output_channels)
         self.relu = nn.ReLU()
@@ -51,7 +56,9 @@ class ConvBlock(nn.Module):
 class CNN(nn.Module):
     """Simple CNN for recognizing characters in a square image."""
 
-    def __init__(self, data_config: Dict[str, Any], args: argparse.Namespace = None) -> None:
+    def __init__(
+        self, data_config: Dict[str, Any], args: argparse.Namespace = None
+    ) -> None:
         super().__init__()
         self.args = vars(args) if args is not None else {}
 
@@ -60,9 +67,17 @@ class CNN(nn.Module):
 
         conv_dim = self.args.get("conv_dim", CONV_DIM)
         fc_dim = self.args.get("fc_dim", FC_DIM)
+        num_conv_blocks = self.args.get("num_conv_blocks", NUM_CONV_BLOCKS)
 
-        self.conv1 = ConvBlock(input_dims[0], conv_dim)
-        self.conv2 = ConvBlock(conv_dim, conv_dim)
+        self.conv_blocks = nn.ModuleList(
+            [
+                ConvBlock(input_dims[0], conv_dim),  # input layer
+            ]
+        )
+        for i in range(num_conv_blocks):
+            if i != 0:
+                self.conv_blocks.append(module=ConvBlock(conv_dim, conv_dim))
+
         self.dropout = nn.Dropout(0.25)
         self.max_pool = nn.MaxPool2d(2)
 
@@ -86,8 +101,8 @@ class CNN(nn.Module):
         """
         _B, _C, H, W = x.shape
         assert H == W == IMAGE_SIZE
-        x = self.conv1(x)
-        x = self.conv2(x)
+        for cb in self.conv_blocks:
+            x = cb(x)
         x = self.max_pool(x)
         x = self.dropout(x)
         x = torch.flatten(x, 1)
@@ -100,4 +115,5 @@ class CNN(nn.Module):
     def add_to_argparse(parser):
         parser.add_argument("--conv_dim", type=int, default=CONV_DIM)
         parser.add_argument("--fc_dim", type=int, default=FC_DIM)
+        parser.add_argument("--num_conv_blocks", type=int, default=NUM_CONV_BLOCKS)
         return parser
