@@ -2,10 +2,11 @@ from typing import Sequence
 
 import pytorch_lightning as pl
 import torch
+import torchmetrics
 import editdistance
 
 
-class CharacterErrorRate(pl.metrics.Metric):
+class CharacterErrorRate(torchmetrics.Metric):
     """Character error rate metric, computed using Levenshtein distance."""
 
     def __init__(self, ignore_tokens: Sequence[int], *args):
