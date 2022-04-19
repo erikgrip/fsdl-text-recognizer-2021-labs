@@ -2,17 +2,31 @@ from typing import Sequence
 
 import pytorch_lightning as pl
 import torch
+import torchmetrics
 import editdistance
 
 
-class CharacterErrorRate(pl.metrics.Metric):
-    """Character error rate metric, computed using Levenshtein distance."""
+class CharacterErrorRate(torchmetrics.Metric):
+    """Character error rate metric, computed using Levenshtein distance.
+
+    Homework expanation:
+    Wikipedie says "Informally, the Levenshtein distance between two words is the minimum number of
+    single-character edits (insertions, deletions or substitutions) required to change one word into the other".
+
+    So this metric takes the predicted sequence of letters, say "fish" and compares it to the correct
+    sequesnce, say "dishes". It then computes the error as a fraction of the longest of the two sequences.
+    In this example we'll have 3 correct ('fISH') out of len('dishes'), meaning a score of 0.5.
+    """
 
     def __init__(self, ignore_tokens: Sequence[int], *args):
         super().__init__(*args)
         self.ignore_tokens = set(ignore_tokens)
-        self.add_state("error", default=torch.tensor(0.0), dist_reduce_fx="sum")  # pylint: disable=not-callable
-        self.add_state("total", default=torch.tensor(0), dist_reduce_fx="sum")  # pylint: disable=not-callable
+        self.add_state(
+            "error", default=torch.tensor(0.0), dist_reduce_fx="sum"
+        )  # pylint: disable=not-callable
+        self.add_state(
+            "total", default=torch.tensor(0), dist_reduce_fx="sum"
+        )  # pylint: disable=not-callable
         self.error: torch.Tensor
         self.total: torch.Tensor
 

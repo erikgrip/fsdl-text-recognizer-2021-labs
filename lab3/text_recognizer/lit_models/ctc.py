@@ -128,6 +128,7 @@ class CTCLitModel(BaseLitModel):  # pylint: disable=too-many-ancestors
         argmax = logprobs.argmax(1)
         decoded = torch.ones((B, max_length)).type_as(logprobs).int() * self.padding_index
         for i in range(B):
+            # [k for k, g in groupby('AAAABBBCCDAABBB')] --> A B C D A B
             seq = [b for b, _g in itertools.groupby(argmax[i].tolist()) if b != self.blank_index][:max_length]
             for ii, char in enumerate(seq):
                 decoded[i, ii] = char
