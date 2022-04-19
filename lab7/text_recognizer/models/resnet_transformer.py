@@ -173,7 +173,7 @@ class ResnetTransformer(nn.Module):
             y = output_tokens[:, :Sy]  # (B, Sy)
             output = self.decode(x, y)  # (Sy, B, C)
             output = torch.argmax(output, dim=-1)  # (Sy, B)
-            output_tokens[:, Sy : Sy + 1] = output[-1:]  # Set the last output token
+            output_tokens[:, Sy : Sy + 1] = torch.transpose(output[-1:], 1, 0)  # Set the last output token
 
             # Early stopping of prediction loop to speed up prediction
             if ((output_tokens[:, Sy] == self.end_token) | (output_tokens[:, Sy] == self.padding_token)).all():
@@ -184,7 +184,7 @@ class ResnetTransformer(nn.Module):
             ind = (output_tokens[:, Sy - 1] == self.end_token) | (output_tokens[:, Sy - 1] == self.padding_token)
             output_tokens[ind, Sy] = self.padding_token
 
-        return output_tokens  # (B, Sy)
+        return output_tokens  # (B, Sy)torch.transpose()
 
     @staticmethod
     def add_to_argparse(parser):
