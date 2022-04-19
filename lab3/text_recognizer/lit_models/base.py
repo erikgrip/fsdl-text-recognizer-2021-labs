@@ -1,6 +1,7 @@
 import argparse
 import pytorch_lightning as pl
 import torch
+import torchmetrics
 
 
 OPTIMIZER = "Adam"
@@ -47,9 +48,9 @@ class BaseLitModel(pl.LightningModule):  # pylint: disable=too-many-ancestors
         self.one_cycle_max_lr = self.args.get("one_cycle_max_lr", None)
         self.one_cycle_total_steps = self.args.get("one_cycle_total_steps", ONE_CYCLE_TOTAL_STEPS)
 
-        self.train_acc = Accuracy()
-        self.val_acc = Accuracy()
-        self.test_acc = Accuracy()
+        self.train_acc = torchmetrics.Accuracy()
+        self.val_acc = torchmetrics.Accuracy()
+        self.test_acc = torchmetrics.Accuracy()
 
     @staticmethod
     def add_to_argparse(parser):
