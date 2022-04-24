@@ -2,7 +2,7 @@ name: fsdl-text-recognizer-2021
 channels:
   - defaults
 dependencies:
-  - python=3.8
+  - python=3.8.12
   - cudatoolkit=11.3
   - pytorch::pytorch==1.10.2
   - pytorch::torchvision==0.11.3
