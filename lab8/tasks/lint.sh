@@ -15,7 +15,7 @@ else
 fi
 
 echo "pylint"
-pylint text_recognizer training || FAILURE=true
+python -m pylint text_recognizer training || FAILURE=true
 
 echo "pycodestyle"
 pycodestyle text_recognizer training || FAILURE=true
