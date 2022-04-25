@@ -58,8 +58,8 @@ jobs:
           name: run linting
           when: always
           command: |
-            echo $(which python)
-            echo $(python --version)
+            echo $(type python)
+            echo $(type pip)
             cd lab8 || true; PYTHONPATH=. ./tasks/lint.sh
 
       - run:
