@@ -47,7 +47,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            pip install --quiet -r requirements/prod.txt -r requirements/dev.txt
+            python3 -m pip install --quiet -r requirements/prod.txt -r requirements/dev.txt
 
       - save_cache:
           key: cache-{{ checksum "requirements/prod.txt" }}-{{ checksum "requirements/dev.txt" }}
@@ -59,6 +59,7 @@ jobs:
           when: always
           command: |
             echo $(which python)
+            echo $(python --version)
             cd lab8 || true; PYTHONPATH=. ./tasks/lint.sh
 
       - run:
