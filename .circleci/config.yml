@@ -47,7 +47,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            python3 -m pip install --quiet -r requirements/prod.txt -r requirements/dev.txt
+            python -m pip install --quiet -r requirements/prod.txt -r requirements/dev.txt
 
       - save_cache:
           key: cache-{{ checksum "requirements/prod.txt" }}-{{ checksum "requirements/dev.txt" }}
