@@ -38,6 +38,7 @@ jobs:
           command: |
             curl -Os https://repo.anaconda.com/miniconda/Miniconda3-py38_4.11.0-Linux-x86_64.sh
             sudo bash Miniconda3-py38_4.11.0-Linux-x86_64.sh -b -p
+            export PATH="/root/miniconda3:$PATH"
             conda env update --prune -f environment.yml
 
       - run:
