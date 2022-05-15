@@ -49,8 +49,8 @@ jobs:
           name: debug prints
           command: |
             which python
-            /root/miniconda3/conda env list
-            /root/miniconda3/conda list
+            sudo /root/miniconda3/conda env list
+            sudo /root/miniconda3/conda list
 
       - run:
           name: install dependencies
