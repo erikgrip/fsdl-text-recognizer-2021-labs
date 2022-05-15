@@ -42,13 +42,12 @@ jobs:
             ~/miniconda3/bin/conda init bash
             ~/miniconda3/bin/conda init zsh
             exec "$SHELL"
-            sudo /root/miniconda3/conda env update --prune -f environment.yml
-            /home/circleci/miniconda3/bin/conda activate fsdl-text-recognizer-2021
 
       - run:
           name: debug prints
           command: |
-            which python
+            sudo /root/miniconda3/conda env update --prune -f environment.yml
+            /home/circleci/miniconda3/bin/conda activate fsdl-text-recognizer-2021
             sudo /home/circleci/miniconda3/bin/conda env list
             sudo /home/circleci/miniconda3/bin/conda list
 
