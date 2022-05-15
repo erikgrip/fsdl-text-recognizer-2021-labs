@@ -43,7 +43,14 @@ jobs:
             ~/miniconda3/bin/conda init zsh
             exec "$SHELL"
             sudo /root/miniconda3/conda env update --prune -f environment.yml
-            conda activate fsdl-text-recognizer-2021
+            conda activate fsdl-text-recognizer-202
+
+      - run:
+          name: debug prints
+          command: |
+            which python
+            conda env list
+            conda list
 
       - run:
           name: install dependencies
