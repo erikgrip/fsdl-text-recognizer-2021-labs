@@ -47,7 +47,7 @@ jobs:
           name: debug prints
           command: |
             sudo /home/circleci/miniconda3/bin/conda env update --prune -f environment.yml
-            /home/circleci/miniconda3/bin/conda activate fsdl-text-recognizer-2021
+            sudo /home/circleci/miniconda3/bin/conda activate fsdl-text-recognizer-2021
             sudo /home/circleci/miniconda3/bin/conda env list
             sudo /home/circleci/miniconda3/bin/conda list
 
