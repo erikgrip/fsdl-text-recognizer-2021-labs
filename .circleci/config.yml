@@ -12,7 +12,7 @@ jobs:
 
       - restore_cache:
           keys:
-          - cache-{{ checksum "requirements/requirements.txt" }}
+          - cache-{{ checksum "requirements/prod.txt" }}-{{ checksum "requirements/dev.txt" }}
 
       - run:
           name: Install Git LFS
@@ -48,17 +48,19 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            python -m pip install --quiet -r requirements/requirements.txt
+            python -m pip install --quiet -r requirements/prod.txt -r requirements/dev.txt
 
       - save_cache:
-          key: cache-{{ checksum "requirements/requirements.txt" }}
+          key: cache-{{ checksum "requirements/prod.txt" }}-{{ checksum "requirements/dev.txt" }}
           paths:
             - ~/.local
 
       - run:
           name: run linting
           when: always
-          command:
+          command: |
+            echo $(type python)
+            echo $(type pip)
             cd lab8 || true; PYTHONPATH=. ./tasks/lint.sh
 
       - run:
