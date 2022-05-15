@@ -17,7 +17,7 @@ class CharacterErrorRate(torchmetrics.Metric):
         self.error: torch.Tensor
         self.total: torch.Tensor
 
-    def update(self, preds: torch.Tensor, targets: torch.Tensor) -> None:
+    def update(self, preds: torch.Tensor, targets: torch.Tensor) -> None:  # type: ignore
         N = preds.shape[0]
         for ind in range(N):
             pred = [_ for _ in preds[ind].tolist() if _ not in self.ignore_tokens]
