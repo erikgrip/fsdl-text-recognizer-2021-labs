@@ -46,6 +46,8 @@ jobs:
       - run:
           name: debug prints
           command: |
+            /home/circleci/miniconda3/bin/conda init bash
+            /home/circleci/miniconda3/bin/conda init zsh
             sudo /home/circleci/miniconda3/bin/conda env update --prune -f environment.yml
             sudo /home/circleci/miniconda3/bin/conda activate fsdl-text-recognizer-2021
             sudo /home/circleci/miniconda3/bin/conda env list
