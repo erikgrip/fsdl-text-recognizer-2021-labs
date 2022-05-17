@@ -47,10 +47,9 @@ jobs:
           name: debug prints
           command: |
             echo "$SHELL"
-            /home/circleci/miniconda3/bin/conda init bash
-            /home/circleci/miniconda3/bin/conda init zsh
+            /home/circleci/miniconda3/bin/conda init sh
             sudo /home/circleci/miniconda3/bin/conda env update --prune -f environment.yml
-            sudo source activate fsdl-text-recognizer-2021
+            sudo /home/circleci/miniconda3/bin/conda activate fsdl-text-recognizer-2021
             sudo /home/circleci/miniconda3/bin/conda env list
             sudo /home/circleci/miniconda3/bin/conda list
 
