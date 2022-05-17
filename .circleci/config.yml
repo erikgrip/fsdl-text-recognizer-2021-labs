@@ -46,6 +46,7 @@ jobs:
       - run:
           name: debug prints
           command: |
+            env
             /home/circleci/miniconda3/bin/conda init bash
             /home/circleci/miniconda3/bin/conda init zsh
             sudo /home/circleci/miniconda3/bin/conda env update --prune -f environment.yml
