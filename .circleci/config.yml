@@ -50,7 +50,7 @@ jobs:
             /home/circleci/miniconda3/bin/conda init bash
             sudo /home/circleci/miniconda3/bin/conda env update --prune -f environment.yml
             /home/circleci/miniconda3/bin/conda info | grep -i 'base environment'
-            eval "$(/home/circleci/miniconda3/bin/conda shell.sh hook)"
+            eval "$(/home/circleci/miniconda3/bin/conda shell.bash hook)"
             source /home/circleci/miniconda3/etc/profile.d/conda.sh
             sudo /home/circleci/miniconda3/bin/conda activate fsdl-text-recognizer-2021
             sudo /home/circleci/miniconda3/bin/conda env list
