@@ -49,7 +49,8 @@ jobs:
             echo "$SHELL"
             /home/circleci/miniconda3/bin/conda init bash
             sudo /home/circleci/miniconda3/bin/conda env update --prune -f environment.yml
-            conda info | grep -i 'base environment'
+            /home/circleci/miniconda3/bin/conda info | grep -i 'base environment'
+            eval "$(/home/circleci/miniconda3/bin/conda shell.sh hook)"
             source /home/circleci/miniconda3/etc/profile.d/conda.sh
             sudo /home/circleci/miniconda3/bin/conda activate fsdl-text-recognizer-2021
             sudo /home/circleci/miniconda3/bin/conda env list
