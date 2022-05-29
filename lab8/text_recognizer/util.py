@@ -1,9 +1,7 @@
 """Utility functions for text_recognizer module."""
-from io import BytesIO
 from pathlib import Path
 from typing import Union
 from urllib.request import urlretrieve
-import base64
 import hashlib
 
 from PIL import Image
@@ -29,8 +27,6 @@ def read_image_pil_file(image_file, grayscale=False) -> Image:
         else:
             image = image.convert(mode=image.mode)
         return image
-
-
 
 
 def compute_sha256(filename: Union[Path, str]):
