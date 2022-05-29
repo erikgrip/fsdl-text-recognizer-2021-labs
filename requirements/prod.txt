@@ -73,12 +73,15 @@ numpy==1.22.2
     #   pytorch-lightning
     #   tensorboard
     #   torchmetrics
+    #   torchvision
 oauthlib==3.2.0
     # via requests-oauthlib
 packaging==21.3
     # via
     #   pytorch-lightning
     #   torchmetrics
+pillow==9.1.1
+    # via torchvision
 protobuf==3.19.4
     # via tensorboard
 pyasn1==0.4.8
@@ -122,20 +125,22 @@ tensorboard-plugin-wit==1.8.1
     # via tensorboard
 toml==0.10.2
     # via -r requirements/prod.in
-torch==1.10.2
+torch @ https://download.pytorch.org/whl/cu113/torch-1.10.2%2Bcu113-cp38-cp38-linux_x86_64.whl
     # via
+    #   -r requirements/prod.in
     #   pytorch-lightning
     #   torchmetrics
+    #   torchvision
 torchmetrics==0.7.1
     # via pytorch-lightning
+torchvision @ https://download.pytorch.org/whl/cpu/torchvision-0.11.3%2Bcpu-cp38-cp38-linux_x86_64.whl
+    # via -r requirements/prod.in
 tqdm==4.62.3
     # via
     #   -r requirements/prod.in
     #   pytorch-lightning
 typing-extensions==4.0.1
-    # via
-    #   pytorch-lightning
-    #   torch
+    # via pytorch-lightning
 urllib3==1.26.8
     # via requests
 werkzeug==2.0.3

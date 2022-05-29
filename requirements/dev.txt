@@ -230,9 +230,9 @@ pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
-pillow==9.0.1
+pillow==9.1.1
     # via
-    #   -r requirements/dev.in
+    #   -c requirements/prod.txt
     #   matplotlib
 platformdirs==2.4.1
     # via
