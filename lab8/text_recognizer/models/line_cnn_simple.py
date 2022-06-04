@@ -3,7 +3,7 @@ import argparse
 import math
 
 import torch
-import torch.nn as nn
+from torch import nn
 
 from .cnn import CNN, IMAGE_SIZE
 

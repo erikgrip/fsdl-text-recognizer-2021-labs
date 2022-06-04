@@ -1,6 +1,5 @@
 from typing import Sequence
 
-import pytorch_lightning as pl
 import torch
 import torchmetrics
 import editdistance

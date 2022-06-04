@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Sequence
 import json
 import os
+import io
 import shutil
 import zipfile
 
@@ -26,6 +27,7 @@ DL_DATA_DIRNAME = BaseDataModule.data_dirname() / "downloaded" / "emnist"
 PROCESSED_DATA_DIRNAME = BaseDataModule.data_dirname() / "processed" / "emnist"
 PROCESSED_DATA_FILENAME = PROCESSED_DATA_DIRNAME / "byclass.h5"
 ESSENTIALS_FILENAME = Path(__file__).parents[0].resolve() / "emnist_essentials.json"
+LOCALE_ENCODING = getattr(io, "LOCALE_ENCODING", "utf-8")
 
 
 class EMNIST(BaseDataModule):
@@ -43,7 +45,7 @@ class EMNIST(BaseDataModule):
 
         if not os.path.exists(ESSENTIALS_FILENAME):
             _download_and_process_emnist()
-        with open(ESSENTIALS_FILENAME) as f:
+        with open(ESSENTIALS_FILENAME, encoding=LOCALE_ENCODING) as f:
             essentials = json.load(f)
         self.mapping = list(essentials["characters"])
         self.inverse_mapping = {v: k for k, v in enumerate(self.mapping)}
@@ -54,7 +56,7 @@ class EMNIST(BaseDataModule):
     def prepare_data(self, *args, **kwargs) -> None:
         if not os.path.exists(PROCESSED_DATA_FILENAME):
             _download_and_process_emnist()
-        with open(ESSENTIALS_FILENAME) as f:
+        with open(ESSENTIALS_FILENAME, encoding=LOCALE_ENCODING) as f:
             _essentials = json.load(f)
 
     def setup(self, stage: str = None) -> None:
@@ -96,8 +98,8 @@ def _process_raw_dataset(filename: str, dirname: Path):
     print("Unzipping EMNIST...")
     curdir = os.getcwd()
     os.chdir(dirname)
-    zip_file = zipfile.ZipFile(filename, "r")
-    zip_file.extract("matlab/emnist-byclass.mat")
+    with zipfile.ZipFile(filename, "r") as zf:
+        zf.extract("matlab/emnist-byclass.mat")
 
     from scipy.io import loadmat  # pylint: disable=import-outside-toplevel
 
@@ -128,7 +130,7 @@ def _process_raw_dataset(filename: str, dirname: Path):
     mapping = {int(k): chr(v) for k, v in data["dataset"]["mapping"][0, 0]}
     characters = _augment_emnist_characters(list(mapping.values()))
     essentials = {"characters": characters, "input_shape": list(x_train.shape[1:])}
-    with open(ESSENTIALS_FILENAME, "w") as f:
+    with open(ESSENTIALS_FILENAME, "w", encoding=LOCALE_ENCODING) as f:
         json.dump(essentials, f)
 
     print("Cleaning up...")

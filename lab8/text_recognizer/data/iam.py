@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, List
 import argparse
 import os
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 import zipfile
 
 from boltons.cacheutils import cachedproperty

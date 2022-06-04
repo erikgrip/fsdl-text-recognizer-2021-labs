@@ -59,7 +59,7 @@ def convert_y_label_to_string(y: torch.Tensor, mapping: Sequence[str], ignore_to
 
 def main():
     """
-    Example runs:
+    Run the paragraph text recognizer. Example runs:
     ```
     python text_recognizer/paragraph_text_recognizer.py text_recognizer/tests/support/paragraphs/a01-077.png
     python text_recognizer/paragraph_text_recognizer.py
