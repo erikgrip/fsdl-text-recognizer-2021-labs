@@ -22,11 +22,11 @@ pip-tools:
 
 # Example training command
 train-mnist-cnn-ddp:
-	python lab8/training/run_experiment.py --max_epochs=10 --gpus=-1 --accelerator=ddp --num_workers=20 --data_class=MNIST --model_class=MLP
+	python lab9/training/run_experiment.py --max_epochs=10 --gpus=-1 --accelerator=ddp --num_workers=20 --data_class=MNIST --model_class=MLP
 
 # Overfit on single batch
 overfit:
-	python lab8/training/run_experiment.py --max_epochs=10 --gpus=-1 --accelerator=ddp --num_workers=20 --data_class=MNIST --model_class=MLP  --overfit_batches=1
+	python lab9/training/run_experiment.py --max_epochs=10 --gpus=-1 --accelerator=ddp --num_workers=20 --data_class=MNIST --model_class=MLP  --overfit_batches=1
 
 # Lint
 lint:
