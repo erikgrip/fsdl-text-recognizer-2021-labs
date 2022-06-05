@@ -1,7 +1,7 @@
 from typing import Any, Dict
 import argparse
 import torch
-import torch.nn as nn
+from torch import nn
 
 from .line_cnn import LineCNN
 

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Sequence
 import argparse
 import json
+import io
 import random
 
 from PIL import Image, ImageFile, ImageOps
@@ -21,6 +22,8 @@ from text_recognizer.data.iam import IAM
 from text_recognizer import util
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+LOCALE_ENCODING = getattr(io, "LOCALE_ENCODING", "utf-8")
 
 PROCESSED_DATA_DIRNAME = BaseDataModule.data_dirname() / "processed" / "iam_lines"
 TRAIN_FRAC = 0.8
@@ -63,11 +66,11 @@ class IAMLines(BaseDataModule):
         print("Saving images, labels, and statistics...")
         save_images_and_labels(crops_trainval, labels_trainval, "trainval", PROCESSED_DATA_DIRNAME)
         save_images_and_labels(crops_test, labels_test, "test", PROCESSED_DATA_DIRNAME)
-        with open(PROCESSED_DATA_DIRNAME / "_max_aspect_ratio.txt", "w") as file:
+        with open(PROCESSED_DATA_DIRNAME / "_max_aspect_ratio.txt", "w", encoding=LOCALE_ENCODING) as file:
             file.write(str(aspect_ratios.max()))
 
     def setup(self, stage: str = None) -> None:
-        with open(PROCESSED_DATA_DIRNAME / "_max_aspect_ratio.txt") as file:
+        with open(PROCESSED_DATA_DIRNAME / "_max_aspect_ratio.txt", encoding=LOCALE_ENCODING) as file:
             max_aspect_ratio = float(file.read())
             image_width = int(IMAGE_HEIGHT * max_aspect_ratio)
             assert image_width <= IMAGE_WIDTH
@@ -143,7 +146,7 @@ def line_crops_and_labels(iam: IAM, split: str):
 def save_images_and_labels(crops: Sequence[Image.Image], labels: Sequence[str], split: str, data_dirname: Path):
     (data_dirname / split).mkdir(parents=True, exist_ok=True)
 
-    with open(data_dirname / split / "_labels.json", "w") as f:
+    with open(data_dirname / split / "_labels.json", "w", encoding=LOCALE_ENCODING) as f:
         json.dump(labels, f)
     for ind, crop in enumerate(crops):
         crop.save(data_dirname / split / f"{ind}.png")
@@ -151,7 +154,7 @@ def save_images_and_labels(crops: Sequence[Image.Image], labels: Sequence[str], 
 
 def load_line_crops_and_labels(split: str, data_dirname: Path):
     """Load line crops and labels for given split from processed directory."""
-    with open(data_dirname / split / "_labels.json") as file:
+    with open(data_dirname / split / "_labels.json", encoding=LOCALE_ENCODING) as file:
         labels = json.load(file)
 
     crop_filenames = sorted((data_dirname / split).glob("*.png"), key=lambda filename: int(Path(filename).stem))

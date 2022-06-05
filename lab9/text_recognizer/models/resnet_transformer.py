@@ -2,7 +2,7 @@ import argparse
 from typing import Any, Dict
 import math
 import torch
-import torch.nn as nn
+from torch import nn
 import torchvision
 
 from .transformer_util import PositionalEncodingImage, PositionalEncoding, generate_square_subsequent_mask

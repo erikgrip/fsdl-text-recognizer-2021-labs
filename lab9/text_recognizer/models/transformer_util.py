@@ -1,7 +1,7 @@
 """Position Encoding and other utilities for Tranformers"""
 import math
 import torch
-import torch.nn as nn
+from torch import nn
 from torch import Tensor
 
 

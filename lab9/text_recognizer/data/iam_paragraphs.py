@@ -3,9 +3,10 @@ import argparse
 from pathlib import Path
 from typing import Dict, Optional, Sequence, Tuple
 import json
+import io
 import numpy as np
 from PIL import Image, ImageOps
-import torchvision.transforms as transforms
+from torchvision import transforms
 
 from text_recognizer.data.base_data_module import BaseDataModule, load_and_print_info
 from text_recognizer.data.emnist import EMNIST
@@ -13,6 +14,7 @@ from text_recognizer.data.iam import IAM
 from text_recognizer.data.util import BaseDataset, convert_strings_to_labels, split_dataset
 
 
+LOCALE_ENCODING = getattr(io, "LOCALE_ENCODING", "utf-8")
 PROCESSED_DATA_DIRNAME = BaseDataModule.data_dirname() / "processed" / "iam_paragraphs"
 
 NEW_LINE_TOKEN = "\n"
@@ -71,7 +73,7 @@ class IAMParagraphs(BaseDataModule):
                 }
             )
 
-        with open(PROCESSED_DATA_DIRNAME / "_properties.json", "w") as f:
+        with open(PROCESSED_DATA_DIRNAME / "_properties.json", "w", encoding=LOCALE_ENCODING) as f:
             json.dump(properties, f, indent=4)
 
     def setup(self, stage: str = None) -> None:
@@ -166,7 +168,7 @@ def save_crops_and_labels(crops: Dict[str, Image.Image], labels: Dict[str, str],
     """Save crops, labels and shapes of crops of a split."""
     (PROCESSED_DATA_DIRNAME / split).mkdir(parents=True, exist_ok=True)
 
-    with open(_labels_filename(split), "w") as f:
+    with open(_labels_filename(split), "w", encoding=LOCALE_ENCODING) as f:
         json.dump(labels, f, indent=4)
 
     for id_, crop in crops.items():
@@ -175,7 +177,7 @@ def save_crops_and_labels(crops: Dict[str, Image.Image], labels: Dict[str, str],
 
 def load_processed_crops_and_labels(split: str) -> Tuple[Sequence[Image.Image], Sequence[str]]:
     """Load processed crops and labels for given split."""
-    with open(_labels_filename(split), "r") as f:
+    with open(_labels_filename(split), "r", encoding=LOCALE_ENCODING) as f:
         labels = json.load(f)
 
     sorted_ids = sorted(labels.keys())
@@ -208,7 +210,7 @@ def get_transform(image_shape: Tuple[int, int], augment: bool) -> transforms.Com
 
 def get_dataset_properties() -> dict:
     """Return properties describing the overall dataset."""
-    with open(PROCESSED_DATA_DIRNAME / "_properties.json", "r") as f:
+    with open(PROCESSED_DATA_DIRNAME / "_properties.json", "r", encoding=LOCALE_ENCODING) as f:
         properties = json.load(f)
 
     def _get_property_values(key: str) -> list:

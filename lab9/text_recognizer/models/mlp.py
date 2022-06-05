@@ -3,7 +3,7 @@ import argparse
 
 import numpy as np
 import torch
-import torch.nn as nn
+from torch import nn
 import torch.nn.functional as F
 
 FC1_DIM = 1024

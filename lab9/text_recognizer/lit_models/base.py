@@ -1,6 +1,7 @@
 import argparse
 import pytorch_lightning as pl
 import torch
+import torchmetrics
 
 
 OPTIMIZER = "Adam"
@@ -9,10 +10,10 @@ LOSS = "cross_entropy"
 ONE_CYCLE_TOTAL_STEPS = 100
 
 
-class Accuracy(pl.metrics.Accuracy):
+class Accuracy(torchmetrics.Accuracy):
     """Accuracy Metric with a hack."""
 
-    def update(self, preds: torch.Tensor, target: torch.Tensor) -> None:
+    def update(self, preds: torch.Tensor, target: torch.Tensor) -> None:  # type: ignore
         """
         Metrics in Pytorch-lightning 1.2+ versions expect preds to be between 0 and 1 else fails with the ValueError:
         "The `preds` should be probabilities, but values were detected outside of [0,1] range."

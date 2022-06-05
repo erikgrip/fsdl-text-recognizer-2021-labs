@@ -1,7 +1,7 @@
 [TYPECHECK]
 # Without this, pylint will complain that torch does not contain some methods
 # https://github.com/pytorch/pytorch/issues/701
-generated-members=numpy.*,torch.*
+generated-members=numpy.*,torch.*,h5py.*
 
 [MESSAGES CONTROL]
 disable=

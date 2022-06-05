@@ -1,11 +1,11 @@
 from typing import Sequence
 
-import pytorch_lightning as pl
 import torch
+import torchmetrics
 import editdistance
 
 
-class CharacterErrorRate(pl.metrics.Metric):
+class CharacterErrorRate(torchmetrics.Metric):
     """Character error rate metric, computed using Levenshtein distance."""
 
     def __init__(self, ignore_tokens: Sequence[int], *args):
@@ -16,7 +16,7 @@ class CharacterErrorRate(pl.metrics.Metric):
         self.error: torch.Tensor
         self.total: torch.Tensor
 
-    def update(self, preds: torch.Tensor, targets: torch.Tensor) -> None:
+    def update(self, preds: torch.Tensor, targets: torch.Tensor) -> None:  # type: ignore
         N = preds.shape[0]
         for ind in range(N):
             pred = [_ for _ in preds[ind].tolist() if _ not in self.ignore_tokens]

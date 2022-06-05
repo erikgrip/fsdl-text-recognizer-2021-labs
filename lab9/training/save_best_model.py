@@ -13,6 +13,7 @@ import argparse
 import sys
 import shutil
 import json
+import io
 from pathlib import Path
 import tempfile
 from typing import Optional, Union
@@ -22,6 +23,7 @@ import wandb
 FILE_NAME = Path(__file__).resolve()
 ARTIFACTS_BASE_DIRNAME = FILE_NAME.parents[1] / "text_recognizer" / "artifacts"
 TRAINING_LOGS_DIRNAME = FILE_NAME.parent / "logs"
+LOCALE_ENCODING = getattr(io, "LOCALE_ENCODING", "utf-8")
 
 
 def save_best_model():
@@ -50,9 +52,9 @@ def save_best_model():
     print(f" - val_loss: {summary['val_loss']}, val_cer: {summary['val_cer']}, test_cer: {summary['test_cer']}")
 
     artifacts_dirname = _get_artifacts_dirname(args.trained_data_class)
-    with open(artifacts_dirname / "config.json", "w") as file:
+    with open(artifacts_dirname / "config.json", "w", encoding=LOCALE_ENCODING) as file:
         json.dump(best_run.config, file, indent=4)
-    with open(artifacts_dirname / "run_command.txt", "w") as file:
+    with open(artifacts_dirname / "run_command.txt", "w", encoding=LOCALE_ENCODING) as file:
         file.write(_get_run_command(best_run))
     _save_model_weights(wandb_run=best_run, project=args.project, output_dirname=artifacts_dirname)
 
